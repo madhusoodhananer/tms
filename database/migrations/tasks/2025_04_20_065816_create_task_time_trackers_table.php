@@ -11,20 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('task_time_trackers', function (Blueprint $table) {
             $table->char('id', 36)->primary();
             $table->bigInteger('seq')->unique()->index();
-            $table->string('title');
-            $table->longText('description')->nullable();
-            $table->string('status');            $table->date('start_date')->nullable();
-            $table->date('due_date')->nullable();
-            $table->date('completed_date')->nullable();
-
+            $table->char('task_id');
+            $table->char('assignee');
+            $table->timestamp('started_at');
+            $table->timestamp('ended_at')->nullable();
+            $table->integer('duration')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('assigned_to')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
-            $table->foreign('project_id')->references('id')->on('projects')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign('task_id')->references('id')->on('tasks')->onUpdate('NO ACTION')->onDelete('NO ACTION');
+            $table->foreign('assignee')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
             $table->string('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('NO ACTION');
             $table->string('updated_by')->nullable();
@@ -39,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('task_time_trackers');
     }
 };
